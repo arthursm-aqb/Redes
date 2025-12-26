@@ -1,24 +1,25 @@
 import socket
-import time
+import json
 
-# Configurações
-PORTA_BROADCAST = 37020  # Porta arbitrária (acima de 1024)
-MENSAGEM_HELLO = b"DISCOVERY_SERVER_HELLO" # A "senha" para o cliente reconhecer
+porta = 6000
 
-# Criação do Socket UDP
-# AF_INET = IPv4, SOCK_DGRAM = UDP
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+class servidor:
 
-# IMPORTANTE: Habilitar permissão para transmitir Broadcast
-server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+    def __init__(self):
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.socket.bind(('0.0.0.0', porta))
+        print(f"Servidor inicializado com sucesso!")
 
-print(f"[*] Servidor de Descoberta iniciado. Enviando broadcast na porta {PORTA_BROADCAST}...")
+    def listen(self):
+        print(f"Aguardando broadcast...")
+        while True:
+            try:
+                mensagem, endereco = self.socket.recvfrom(4096)
+                mensagem_decodificada = mensagem.decode('utf-8')
 
-try:
-    while True:
-        # Envia a mensagem para '255.255.255.255' (Todos na rede local)
-        server_socket.sendto(MENSAGEM_HELLO, ('<broadcast>', PORTA_BROADCAST))
-        print(" -> Broadcast enviado: Estou aqui!")
-        time.sleep(3) # Espera 3 segundos antes de enviar de novo
-except KeyboardInterrupt:
-    print("\nServidor encerrado.")
+                if mensagem_decodificada == 'HELLO':
+                    print(f"Cliente de IP {endereco[0]} encontrado")
+
+            except Exception as e:
+                print(f"Erro: {e} ")
+
