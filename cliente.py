@@ -1,35 +1,71 @@
 import socket
+import json
+import time
+from dadosCliente import dadosCliente
 
-# Configurações (Deve ser a mesma porta do servidor)
-PORTA_BROADCAST = 37020
-MENSAGEM_ESPERADA = b"DISCOVERY_SERVER_HELLO"
+porta = 6000
 
-# Criação do Socket UDP
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+class Cliente:
+    def __init__(self):
+        self.dados = dadosCliente()
+        self.ip = None
 
-# Habilita reutilização de porta (evita erro "Address already in use" se reiniciar rápido)
-client_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    def conectaServidor(self):
 
-# Bind: O cliente precisa "amarrar" o socket à porta para escutar
-# "" ou "0.0.0.0" significa "escutar em todas as placas de rede disponíveis"
-client_socket.bind(("", PORTA_BROADCAST))
+        print(f"Procurando servidor...")
+        udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        udp.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        udp.settimeout(5)
 
-print(f"[*] Cliente aguardando sinal do servidor na porta {PORTA_BROADCAST}...")
+        try:
+            udp.sendto(f"HELLO".encode('utf-8'), ('<broadcast>', porta))
+            mensagem, endereco = udp.recvfrom(1024)
 
-encontrado = False
+            if mensagem.decode('utf-8') == 'Sucesso':
+                self.ip = endereco[0]
+                print(f"Servidor: {endereco[0]} - encontrado")
+                return True
+        except socket.timeout:
+            print("Servidor não encontrado")
+        except Exception as e:
+            print(f"Erro: {e}")
+        finally:
+            udp.close()
 
-while not encontrado:
-    # recvfrom retorna (dados, (ip_origem, porta_origem))
-    # 1024 é o tamanho do buffer (quantos bytes ler)
-    dados, endereco = client_socket.recvfrom(1024)
+        return False
 
-    ip_servidor = endereco[0]
+    def enviarDados(self):
+        if not self.ip:
+            print(f"Erro: não estou conectado a um servidor...\n")
+            return
 
-    print(f"Recebido de {ip_servidor}: {dados}")
+        print(f"Enviando dados para envio...")
 
-    if dados == MENSAGEM_ESPERADA:
-        print(f"\n[SUCESSO] Servidor encontrado no IP: {ip_servidor}")
-        encontrado = True
-        # Aqui você guardaria o 'ip_servidor' para iniciar a conexão TCP depois
+        dadosMonitoramento = self.dados.coletarDados()
+        msg_json = json.dumps(dadosMonitoramento)
 
-print("Fim da descoberta.")
+        tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        try:
+            print("Aguardando servidor preparar conexão TCP...")
+            time.sleep(1)
+            tcp.connect((self.ip, porta))
+            tcp.send(msg_json.encode('utf-8'))
+            print(f"Dados enviado com sucesso...")
+        except Exception as e:
+            print(f"Erro de envio TCP: {e}")
+        finally:
+            tcp.close()
+
+    def Iniciar(self):
+        if self.conectaServidor():
+            self.enviarDados()
+        else:
+            print(f"Erro")
+
+
+if __name__ == '__main__':
+    cliente = Cliente()
+    cliente.Iniciar()
+
+
