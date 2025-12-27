@@ -28,8 +28,18 @@ class servidorTCP:
                 print(f"Dados do Cliente: {endereco[0]}")
                 print(f"Sistema Operacional: {relatorio['so']}")
                 print(f"CPU: {relatorio['processador']['fisico']} núcleos fisicos, {relatorio['processador']['logico']} núcleos logicos, uso do processador {relatorio['processador']['uso']}%")
-                print(f"RAM total: {relatorio['memoria']['total']} GB")
-                print(f"Armazenamento em disco total: {relatorio['disco']['total']} GB")
+                print(f"RAM total: {relatorio['memoria']['total']} GB, RAM livre: {relatorio['memoria']['livre']} GB")
+                print(f"Disco total: {relatorio['disco']['total']} GB, Disco livre: {relatorio['disco']['livre']} GB")
+                print("-" * 20)
+
+                for item in relatorio['rede']:
+                    # Aqui usamos as chaves exatas que você definiu no dicionário info_interface
+                    print(f"Interface: {item['nome_interface']} ({item['tipo_interface']})")
+                    print(f"IPv4: {item['ipv4']}")
+                    print(f"IPv6: {item['ipv6']}")
+                    print(f"MAC:  {item['mac']}")
+                    print(f"Status: {item['status_interface']}")
+                    print("." * 20)
                 print(f"\n" + "-" * 30)
 
         except Exception as e: # Caso ocorra algum erro, o imprime no terminal

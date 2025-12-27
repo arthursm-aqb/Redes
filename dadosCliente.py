@@ -52,7 +52,7 @@ class dadosCliente:
                     ip_v4 = addr.address
                 elif addr.family == socket.AF_INET6:
                     ip_v6 = addr.address
-                elif addr.family == socket.AF_LINK:
+                elif addr.family == psutil.AF_LINK:
                     mac = addr.address
 
             if nome_interface in status: # Se o rotulo atual (Wi-Fi, Ethernet, Loopback) da interface de rede existe no status, pegamos se ele tá ativo ou não
