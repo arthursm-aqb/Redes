@@ -35,7 +35,7 @@ class Cliente:
         return False
 
     def enviarDados(self):
-        if not self.ip:
+        if self.ip is None:
             print(f"Erro: não estou conectado a um servidor...\n")
             return
 
@@ -58,7 +58,7 @@ class Cliente:
             tcp.close()
 
     def Iniciar(self):
-        if self.conectaServidor():
+        if self.conectaServidor() == True:
             self.enviarDados()
         else:
             print(f"Erro")

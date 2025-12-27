@@ -44,7 +44,7 @@ class servidorTCP:
     def processar_dados_cliente(self, conexao, endereco):
         try:
             dados = conexao.recv(4096)
-            if dados:
+            if len(dados)>0:
                 relatorio = json.loads(dados.decode('utf-8'))
 
                 print(f"\n" + "-" * 30)
