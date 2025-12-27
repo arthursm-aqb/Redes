@@ -12,7 +12,7 @@ class dadosCliente:
         nome = nome.lower() # converte todas as strings para minúsculo para formatação
         if "loopback" in nome or "lo" == nome:
             return "Loopback"
-        elif "wifi" in nome or "wlan" in nome or "wireless" in nome:
+        elif "wifi" in nome or "wlan" in nome or "wireless" in nome or "wi-fi" in nome:
             return "Wi-Fi"
         elif "eth" in nome or "en" in nome or "ethernet" in nome:
             return "Ethernet"
