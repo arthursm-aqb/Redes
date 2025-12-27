@@ -6,47 +6,48 @@ porta = 6000
 class servidorUDP:
 
     def __init__(self):
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.socket.bind(('0.0.0.0', porta))
-        print(f"Servidor inicializado com sucesso no protocolo UDP!")
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # Cria um ponto de conexão IPv4 UDP
+        self.socket.bind(('0.0.0.0', porta)) # Vincula esse ponto de conexão na porta 6000 e aceita receber pacotes de qualquer interface de rede (Wi-Fi, Ethernet, Loopback)
+        print(f"Ponto de conexão do servidor inicializado com sucesso no protocolo IPV4 UDP!")
 
     def listen(self):
         print(f"Aguardando broadcast...")
         while True:
             try:
-                mensagem, endereco = self.socket.recvfrom(4096)
-                mensagem_decodificada = mensagem.decode('utf-8')
+                mensagem, endereco = self.socket.recvfrom(4096) # Espera o envio de um pacote contendo os dadosCliente e o endereço de origem. Lê até 4096 bytes e ignora o resto.
+                mensagem_decodificada = mensagem.decode('utf-8') # Decodifica os bytes em uma String
 
-                if mensagem_decodificada == 'HELLO':
+                if mensagem_decodificada == 'HELLO': # Se a mensagem for uma String "HELLO" captura o endereço do cliente e envia ao cliente um pacote contendo uma mensagem "SUCESSO", caso contrário, espera outro pacote.
                     print(f"Cliente de IP {endereco[0]} encontrado")
-                    self.socket.sendto("Sucesso".encode('utf-8'), endereco)
-                    self.socket.close()
-                    return
+                    self.socket.sendto("Sucesso".encode('utf-8'), endereco) # Envia ao cliente a mensagem "Sucesso"
+                    self.socket.close() # Fecha o ponto de conexão UDP
+                    return # Retorna o fluxo a sequência principal
 
-            except Exception as e:
-                print(f"Erro: {e} ")
+            except Exception as e: # Se acontecer um erro na função listen, imprime na tela o erro
+                print(f"Erro no listen: {e} ")
 
 
 class servidorTCP:
     def __init__(self):
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.bind(('0.0.0.0', porta))
-        self.socket.listen()
-        print(f"Servidor inicializado com sucesso no protocolo TCP!")
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Cria um ponto de conexão IPv4 TCP
+        self.socket.bind(('0.0.0.0', porta)) # Vincula esse ponto de conexão na porta 6000 e aceita receber conexões de qualquer interface de rede (Wi-Fi, Ethernet, Loopback)
+        self.socket.listen() # Começa a esperar solicitações de conexões TCP IPv4
+        print(f"Ponto de conexão do servidor inicializado com sucesso no protocolo TCP!")
 
     def listen(self):
         print(f"Aguardando conexão TCP...")
         while True:
-            conexao, endereco = self.socket.accept()
+            conexao, endereco = self.socket.accept() # Aceita a solicitação de conexão TCP e atribui a conexao um ponto de conexão TCP IPv4 temporário entre servidor-cliente e endereco um endereço IPv4 do cliente
             print(f"Conexão TCP feita com sucesso com: {endereco[0]}")
-            self.processar_dados_cliente(conexao, endereco)
+            self.processar_dados_cliente(conexao, endereco) # Passa o ponto de conexão com o cliente e o endereço IPv4 dele a uma função auxiliar que irá processar e imprimir os dados relacionados ao computador-cliente
 
     def processar_dados_cliente(self, conexao, endereco):
         try:
-            dados = conexao.recv(4096)
-            if len(dados)>0:
-                relatorio = json.loads(dados.decode('utf-8'))
+            dados = conexao.recv(4096) # Lê até os 4096 bytes do fluxo de dados enviado ao ponto de conexão TCP IPv4.
+            if len(dados)>0: # Executa se o pacote não estiver vazio
+                relatorio = json.loads(dados.decode('utf-8')) # Decodifica o pacote em string no formato utf-8 e é transformado em dicionário contendo os dados pelo json.
 
+                # Impressão dos dados do SO, CPU, RAM E HD/SSD do Cliente
                 print(f"\n" + "-" * 30)
                 print(f"Dados do Cliente: {endereco[0]}")
                 print(f"Sistema Operacional: {relatorio['so']}")
@@ -55,10 +56,10 @@ class servidorTCP:
                 print(f"Armazenamento em disco total: {relatorio['disco']['total']} GB")
                 print(f"\n" + "-" * 30)
 
-        except Exception as e:
-            print(f"Erro: {e} ")
+        except Exception as e: # Caso ocorra algum erro, o imprime no terminal
+            print(f"Erro no processamento de dados do cliente: {e} ")
         finally:
-            conexao.close()
+            conexao.close() # Por fim, fecha a conexão
 
 if __name__ == "__main__":
     servidor_descobre = servidorUDP()
