@@ -48,12 +48,13 @@ class Dashboard:
         print("-" * 75)
 
     def detalharCliente(self, ip, dados):
-        self.clean()
-        if dados is None:
+        self.clean() # Limpa a tela atual
+        if dados is None: # Se dados não tiver um dicionário, então volta ao fluxo principal de servidorTCP
             print(f"Erro: Cliente com IP {ip} não encontrado.")
             input("Pressione ENTER para voltar...")
             return
 
+        # Imprime o painel com os dados detalhados do cliente escolhido
         print("=" * 75)
         print(f"Detalhes do cliente: {ip}")
         print("=" * 75)
