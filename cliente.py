@@ -60,18 +60,18 @@ class Cliente:
     def Iniciar(self):
         if self.conectaServidor() == True: # Se foi possível capturar o endereço do servidor, então envia os dados para ele por meio de TCP IPv4, caso contrário, imprime a mensagem de erro.
 
-            while True:
+            while True: # Loop principal para reenvio de dados a cada 5 segundos para o servidor das informações do sistema do cliente
                 try:
                     print("Enviando dados...")
-                    self.enviarDados()
-                    print("Reinvio de dados daqui há 5 segundos... (APERTE CTRL + C para finalizar a conexão)")
-                    time.sleep(5)
-                except KeyboardInterrupt:
+                    self.enviarDados() # Envia as métricas do sistema para o servidor
+                    print("Reenvio de dados daqui a 5 segundos... (APERTE CTRL + C para finalizar a conexão)")
+                    time.sleep(5) # Pausa a execução do loop por 5 segundos
+                except KeyboardInterrupt: # Se o usuário pressionar CTRL + C, fecha a execução do cliente
                     print("\nPrograma encerrado...")
                     break
-                except Exception as e:
+                except Exception as e: # Caso ocorra qualquer outro problema, imprime o erro
                     print(f"Erro de envio de dados em Iniciar: {e}")
-        else:
+        else: # Caso não foi possível conectar ao servidor, imprime na tela o erro
             print(f"Erro: não foi possível localizar um servidor...")
 
 
