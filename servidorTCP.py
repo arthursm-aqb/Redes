@@ -4,10 +4,10 @@ import json
 import time
 from interface import Dashboard
 from cryptography.fernet import Fernet
-porta = 6000
 
-Chave = b'8_S0bC8x0e_oGz1_v4d6d6-fD2_X7xQz5y1wZ3_v4d0='
-cipher = Fernet(Chave)
+porta = 6000 # Porta usada para capturar as conexões
+Chave = b'8_S0bC8x0e_oGz1_v4d6d6-fD2_X7xQz5y1wZ3_v4d0=' # Chave de criptografia de 32 bytes
+cipher = Fernet(Chave) # Cifra com a chave
 
 class servidorTCP:
     def __init__(self):
@@ -72,12 +72,12 @@ class servidorTCP:
 
 
     def processar_dados_cliente(self, conexao, endereco):
-        ip_cliente = endereco[0]
+        ip_cliente = endereco[0] # Pega o IP da conexão atual
         try:
             dados = conexao.recv(4096) # Lê até os 4096 bytes do fluxo de dados enviado ao ponto de conexão TCP IPv4.
             if len(dados)>0: # Executa se o segmento não estiver vazio
                 try:
-                    decodificado = cipher.decrypt(dados)
+                    decodificado = cipher.decrypt(dados) # Descriptografa os dados recebidos
 
                     relatorio = json.loads(decodificado.decode('utf-8')) # Decodifica o pacote em string no formato utf-8 e é transformado em dicionário contendo os dados pelo json.
 
@@ -86,7 +86,7 @@ class servidorTCP:
                     ip_cliente = endereco[0] # Guarda o IP do cliente atual que conectou com o servidor
                     self.clientes[ip_cliente] = relatorio # Guarda em clientes o dicionário com os dados do cliente atual com a chave sendo seu IP
                     self.tela.desenharDashboard(self.clientes) # Imprime no dashboard informações simplificadas do cliente que acabou de se conectar ao servidor
-                except Exception as e_crypto:
+                except Exception as e_crypto: # Caso ocorra um erro na descriptografia, avisa ao usuário
                     print(f"Falha de criptografia de {ip_cliente}")
                     return
 
