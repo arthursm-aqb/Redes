@@ -59,7 +59,18 @@ class Cliente:
 
     def Iniciar(self):
         if self.conectaServidor() == True: # Se foi possível capturar o endereço do servidor, então envia os dados para ele por meio de TCP IPv4, caso contrário, imprime a mensagem de erro.
-            self.enviarDados()
+
+            while True:
+                try:
+                    print("Enviando dados...")
+                    self.enviarDados()
+                    print("Reinvio de dados daqui há 5 segundos... (APERTE CTRL + C para finalizar a conexão)")
+                    time.sleep(5)
+                except KeyboardInterrupt:
+                    print("\nPrograma encerrado...")
+                    break
+                except Exception as e:
+                    print(f"Erro de envio de dados em Iniciar: {e}")
         else:
             print(f"Erro: não foi possível localizar um servidor...")
 
