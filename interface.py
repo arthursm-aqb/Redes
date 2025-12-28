@@ -72,7 +72,7 @@ class Dashboard:
 
         print("-" * 75)
         print("Interfaces de rede:")
-        print(f"{'NOME':<30} | {'TIPO':<10} | {'STATUS'}")
+        print(f"{'NOME':<30} | {'TIPO':<10} | {'STATUS'}\n")
 
         for item in dados['rede']:
             nome = item['nome_interface']
