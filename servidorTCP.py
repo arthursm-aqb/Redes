@@ -1,9 +1,13 @@
+from datetime import datetime
 import socket
 import json
 import time
 from interface import Dashboard
-
+from cryptography.fernet import Fernet
 porta = 6000
+
+Chave = b'8_S0bC8x0e_oGz1_v4d6d6-fD2_X7xQz5y1wZ3_v4d0='
+cipher = Fernet(Chave)
 
 class servidorTCP:
     def __init__(self):
@@ -68,22 +72,33 @@ class servidorTCP:
 
 
     def processar_dados_cliente(self, conexao, endereco):
+        ip_cliente = endereco[0]
         try:
             dados = conexao.recv(4096) # Lê até os 4096 bytes do fluxo de dados enviado ao ponto de conexão TCP IPv4.
             if len(dados)>0: # Executa se o segmento não estiver vazio
-                relatorio = json.loads(dados.decode('utf-8')) # Decodifica o pacote em string no formato utf-8 e é transformado em dicionário contendo os dados pelo json.
+                try:
+                    decodificado = cipher.decrypt(dados)
 
-                relatorio['visibilidade'] = time.time() # Adiciona uma chave nova no relatório com o tempo atual que o servidor recebeu o segmento
+                    relatorio = json.loads(decodificado.decode('utf-8')) # Decodifica o pacote em string no formato utf-8 e é transformado em dicionário contendo os dados pelo json.
 
-                ip_cliente = endereco[0] # Guarda o IP do cliente atual que conectou com o servidor
-                self.clientes[ip_cliente] = relatorio # Guarda em clientes o dicionário com os dados do cliente atual com a chave sendo seu IP
-                self.tela.desenharDashboard(self.clientes) # Imprime no dashboard informações simplificadas do cliente que acabou de se conectar ao servidor
+                    relatorio['visibilidade'] = time.time() # Adiciona uma chave nova no relatório com o tempo atual que o servidor recebeu o segmento
+
+                    ip_cliente = endereco[0] # Guarda o IP do cliente atual que conectou com o servidor
+                    self.clientes[ip_cliente] = relatorio # Guarda em clientes o dicionário com os dados do cliente atual com a chave sendo seu IP
+                    self.tela.desenharDashboard(self.clientes) # Imprime no dashboard informações simplificadas do cliente que acabou de se conectar ao servidor
+                except Exception as e_crypto:
+                    print(f"Falha de criptografia de {ip_cliente}")
+                    return
 
         except Exception as e: # Caso ocorra algum erro, o imprime no terminal
             print(f"Erro no processamento de dados do cliente: {e} ")
+
+
         finally:
             conexao.close() # Por fim, fechamos a conexão por até o momento somente coletamos os dados do cliente
             # (ainda sem implementação de ação remota servidor -> cliente para justificar manter a conexão TCP)
+
+
 
 
 if __name__ == "__main__":
