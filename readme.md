@@ -35,3 +35,12 @@
 * Controle remoto do mouse do cliente (1,0) ❌
 * Controle remoto do teclado do cliente (1,0) ❌
 
+
+# Requisitos Principais
+
+## Arquitetura Cliente/Servidor:
+
+####   A arquitetura de rede Cliente/Servidor funciona com um servidor central interrupto recebendo requisições de um cliente que esporadicamente necessita de um serviço naquela rede em que o servidor se encontra distribuindo esse serviço.
+#### Para implementar essa arquitetura nesse projeto, foi decidido a utilização do protocolo TCP e UDP. Para a descoberta automática dos clientes, o servidor central espera pelo envio de pacotes no socket UDP na porta 6000 de clientes anunciando a sua presença com a mensagem "HELLO" criptografada enviada por broadcast. No momento que o servidor recebe o pacote e confirma que é a mensagem esperada "HELLO", envia a esse endereço uma mensagem "SUCESSO" criptografada.
+#### 
+
