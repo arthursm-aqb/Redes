@@ -57,3 +57,8 @@
 
 <div align="center"> <img src="img/raiox.png" alt="Tirinha da Arquitetura-Cliente-Servidor do projeto" width="700" height="350"> <p>Figura 3: Estrutura modular dos componentes (Cliente, Servidor TCP e UDP).</p> </div>
 
+# Segurança
+
+#### A segurança utilizada no projeto é aplicada na comunicação entre servidor-cliente. Para isso, foi escolhida a biblioteca Fernet que aplica criptografia com uma chave de 32 bytes para criar uma cifra, cifra essa usada na criptografia dos payloads. No envio/recebimento dos pacotes via UDP e envio dos dados do cliente na conexão TCP é aplicado a criptografia, assim mantendo a integridade da comunicação, já que qualquer alteração na mensagem durante o transporte dela pela rede, a descriptografia falha. 
+
+# Coleta de dados
