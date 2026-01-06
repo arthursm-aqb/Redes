@@ -41,10 +41,13 @@
 ####   A arquitetura de rede Cliente/Servidor funciona com um servidor central ininterrupto recebendo requisições de um cliente que esporadicamente necessita de um serviço naquela rede em que o servidor se encontra distribuindo esse serviço.
 
 <div align="center">
-<img src="img/arq_client_server.png" alt="Arquitetura-Cliente-Servidor">
+    <img src="img/arq_client_server.png" alt="Arquitetura-Cliente-Servidor" >
 </div>
 
 #### Para implementar essa arquitetura nesse projeto, foi decidido a utilização do protocolo TCP e UDP. Para a descoberta automática dos clientes, o servidor central espera pelo envio de pacotes no socket UDP de clientes anunciando a sua presença com a mensagem "HELLO" criptografada enviada por broadcast. No momento que o servidor recebe o pacote e confirma que é uma mensagem válida "HELLO", envia a esse endereço uma mensagem "SUCESSO" criptografada, e prossegue escutando outros envios de pacote UDP. Em paralelo, o socket TCP do servidor central fica esperando uma tentativa de conexão para realizar o Three-way Handshake. No momento que o cliente recebe a mensagem "SUCESSO" criptografada, ele descobre o IP do servidor que está oferecendo o serviço do projeto, em seguida, armazena o endereço do servidor, fecha o socket UDP, abre um socket TCP e faz uma conexão TCP com o servidor central. A conexão fica numa rotina de conexões até o cliente decidir encerrar as tentativas de conexão, assim se encerra o processo cliente.
+<div align="center">
+    <img src="img/tirinha_server_arq.png" alt="Tirinha da Arquitetura-Cliente-Servidor do projeto" width="1500" height="400">
+</div>
 
 #### Além disso, foi necessário dividir todo esse processo em três classes principais: cliente, servidorTCP e servidorUDP. A divisão do servidor em dois tipos foi pela razão de habilitar a descoberta automática, já que sem conhecimento multithreading, ao fazer a descoberta automática, o código do servidor ficaria travado nesse processo. Por esse motivo, para contornar esse problema, foi feito a divisão assim as conexões TCP e a descoberta automática poderia se realizada em paralelo sem multithreading. Essa decisão também permitiu separar as funções de cada servidor, o servidorUDP funciona como uma torre de transmissão - guia o cliente para o servidor que realmente oferece o serviço (servidorTCP), e o servidorTCP fica responsável pela conexão e extração/processamento dos dados do cliente. Por fim, o cliente assume as duas funções: descobrir o servidor(realiza broadcast via UDP, descobre o servidor e conecta a ele via TCP) remetente (envia os dados ao servidor e encerra conexão).
 
@@ -54,4 +57,7 @@
 * servidorTCP: Monitora a porta 6000 por conexões TCP e processa os dados do cliente.
 * servidorUDP: Monitora a porta 6000 aguardando pacotes UDP com payload válido e confirma a descoberta do servidor (descoberta automática)
 
+<div align="center">
+    <img src="img/raiox.png" alt="Tirinha da Arquitetura-Cliente-Servidor do projeto" width="700" height="350">
+</div>
 
