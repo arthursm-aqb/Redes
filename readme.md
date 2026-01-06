@@ -41,7 +41,7 @@
 ####   A arquitetura de rede Cliente/Servidor funciona com um servidor central ininterrupto recebendo requisições de um cliente que esporadicamente necessita de um serviço naquela rede em que o servidor se encontra distribuindo esse serviço.
 
 <div align="center">
-    ![Arquitura Cliente-Servidor](img/arq_client_server.png)
+![Arquitura Cliente-Servidor](img/arq_client_server.png)
 </div>
 
 #### Para implementar essa arquitetura nesse projeto, foi decidido a utilização do protocolo TCP e UDP. Para a descoberta automática dos clientes, o servidor central espera pelo envio de pacotes no socket UDP de clientes anunciando a sua presença com a mensagem "HELLO" criptografada enviada por broadcast. No momento que o servidor recebe o pacote e confirma que é uma mensagem válida "HELLO", envia a esse endereço uma mensagem "SUCESSO" criptografada, e prossegue escutando outros envios de pacote UDP. Em paralelo, o socket TCP do servidor central fica esperando uma tentativa de conexão para realizar o Three-way Handshake. No momento que o cliente recebe a mensagem "SUCESSO" criptografada, ele descobre o IP do servidor que está oferecendo o serviço do projeto, em seguida, armazena o endereço do servidor, fecha o socket UDP, abre um socket TCP e faz uma conexão TCP com o servidor central. A conexão fica numa rotina de conexões até o cliente decidir encerrar as tentativas de conexão, assim se encerra o processo cliente.
