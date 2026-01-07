@@ -65,3 +65,8 @@
 
 #### A telemetria dos dados do cliente inclui a quantidade de processadores/núcleos, memória RAM livre, espaço em disco livre, IPs das interfaces de rede, seus status e tipos, e a identificação do SO. Com esse propósito, é criada uma classe auxiliar chamada dadosCliente, responsável pelo armazenamento dos dados do cliente, que utiliza as bibliotecas psutil (métricas de hardware), platform (dados do SO) e socket (manipulação de endereços).
 #### A instância dessa classe inicia com seu construtor coletando o sistema do cliente e sua versão. Na classe, existem dois métodos: tipo_interface() e coletarDados(). O método coletarDados() consolida as informações de CPU, RAM e Disco em dicionários. Ademais, coleta todos os IPs das interfaces de rede e seus status e, em um _loop_, filtra essas informações (IPv4, IPv6, Status, MAC e nome) e utiliza o método auxiliar tipo_interface() para identificar o tipo da interface. Por fim, adiciona todas essas informações em uma lista de dicionários e, no fim do método, retorna um dicionário com sistema, informações da CPU, RAM, Disco e das placas de rede.
+
+### Integração ao projeto:
+
+#### A classe dadosCliente é integrada ao projeto na classe Cliente. No construtor da classe Cliente, a variável dados é inicializada com uma instância do objeto dadosCliente.
+#### Após a inicialização, esse objeto é utilizado no método enviarDados(). Nesse método, a variável dadosMonitoramento recebe o retorno de coletarDados() da classe Cliente, seu conteúdo é convertido para o formato JSON, criptografado e, por fim, enviado ao servidor central.
