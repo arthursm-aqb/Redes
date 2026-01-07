@@ -70,3 +70,5 @@
 
 #### A classe dadosCliente é integrada ao projeto na classe Cliente. No construtor da classe Cliente, a variável dados é inicializada com uma instância do objeto dadosCliente.
 #### Após a inicialização, esse objeto é utilizado no método enviarDados(). Nesse método, a variável dadosMonitoramento recebe o retorno de coletarDados() da classe Cliente, seu conteúdo é convertido para o formato JSON, criptografado e, por fim, enviado ao servidor central.
+
+# Servidor/Consolidação
