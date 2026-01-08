@@ -72,3 +72,8 @@
 #### Após a inicialização, esse objeto é utilizado no método enviarDados(). Nesse método, a variável dadosMonitoramento recebe o retorno de coletarDados() da classe Cliente, seu conteúdo é convertido para o formato JSON, criptografado e, por fim, enviado ao servidor central.
 
 # Servidor/Consolidação
+
+#### Para a visualização desses dados pelo usuário controlador do servidor, foi criada uma classe chamada Interface. Essa classe utiliza as bibliotecas os (rotinas do SO) e time (manipulação de tempo).
+#### A Interface possui três métodos: clean(), desenharDashboard() e detalharCliente(). Primeiro, clean() identifica o S.O. do servidor e executa o comando de limpeza de tela apropriado. Segundo, desenharDashboard() recebe uma lista dos clientes que já se conectaram ao servidorTCP, limpa a tela e imprime uma tabela organizada com IP, S.O. e Status (On-line ou Off-line).
+#### Por último, detalharCliente() recebe o IP-alvo e seus respectivos dados, imprimindo na tela uma tabela com IP, S.O., CPU, RAM, Disco e Interfaces de Rede. Caso o servidor não possua nenhum registro do cliente do IP-alvo, o método informa ao usuário que não foram encontrados dados e retorna ao dashboard simplificado.
+### Integração ao projeto:

@@ -14,7 +14,7 @@ class Dashboard:
     def desenharDashboard(self, listaClientes): # Função que imprime o dashboard na tela do terminal com os dados do usuário
         self.clean() # Limpa a tela atual
 
-        tempo = time.time() # Recebe o tempo no momento da chamada
+        tempo = time.time() # Recebe o tempo do momento da chamada
 
         online = 0; # Contador de clientes com status online
         offline = 0; # Contador de clientes com status offline
