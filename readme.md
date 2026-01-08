@@ -28,7 +28,7 @@
 
 ## 4. Segurança (1.0 ponto): 🟡
 * Comunicação segura utilizando criptografia e mecanismos de integridade ponta a ponta (0,5) ✅
-* Autenticação dos clientes e controle de acesso por perfil (0,3) ❌
+* Autenticação dos clientes e controle de acesso por perfil (0,3) ✅
 * Auditoria no servidor, registrando ações executadas, responsáveis e data/hora (0,2) ❌
 
 ## 5. Bônus (2.0 pontos): ❌
@@ -66,7 +66,7 @@
 #### A telemetria dos dados do cliente inclui a quantidade de processadores/núcleos, memória RAM livre, espaço em disco livre, IPs das interfaces de rede, seus status e tipos, e a identificação do SO. Com esse propósito, é criada uma classe auxiliar chamada dadosCliente, responsável pelo armazenamento dos dados do cliente, que utiliza as bibliotecas psutil (métricas de hardware), platform (dados do SO) e socket (manipulação de endereços).
 #### A instância dessa classe inicia com seu construtor coletando o sistema do cliente e sua versão. Na classe, existem dois métodos: tipo_interface() e coletarDados(). O método coletarDados() consolida as informações de CPU, RAM e Disco em dicionários. Ademais, coleta todos os IPs das interfaces de rede e seus status e, em um _loop_, filtra essas informações (IPv4, IPv6, Status, MAC e nome) e utiliza o método auxiliar tipo_interface() para identificar o tipo da interface. Por fim, adiciona todas essas informações em uma lista de dicionários e, no fim do método, retorna um dicionário com sistema, informações da CPU, RAM, Disco e das placas de rede.
 
-### Integração ao projeto:
+### Integração de dadosCliente ao projeto:
 
 #### A classe dadosCliente é integrada ao projeto na classe Cliente. No construtor da classe Cliente, a variável dados é inicializada com uma instância do objeto dadosCliente.
 #### Após a inicialização, esse objeto é utilizado no método enviarDados(). Nesse método, a variável dadosMonitoramento recebe o retorno de coletarDados() da classe Cliente, seu conteúdo é convertido para o formato JSON, criptografado e, por fim, enviado ao servidor central.
@@ -74,6 +74,9 @@
 # Servidor/Consolidação
 
 #### Para a visualização desses dados pelo usuário controlador do servidor, foi criada uma classe chamada Interface. Essa classe utiliza as bibliotecas os (rotinas do SO) e time (manipulação de tempo).
-#### A Interface possui três métodos: clean(), desenharDashboard() e detalharCliente(). Primeiro, clean() identifica o S.O. do servidor e executa o comando de limpeza de tela apropriado. Segundo, desenharDashboard() recebe uma lista dos clientes que já se conectaram ao servidorTCP, limpa a tela e imprime uma tabela organizada com IP, S.O. e Status (On-line ou Off-line).
+#### A Interface possui três métodos: clean(), desenharDashboard() e detalharCliente(). Primeiro, clean() identifica o S.O. do servidor e executa o comando de limpeza de tela apropriado. Segundo, desenharDashboard() recebe uma lista dos clientes que já se conectaram ao servidorTCP, limpa a tela e imprime uma tabela organizada com IP, S.O. e Status (On-line ou Off-line), o status é determinado pela diferença de tempo entre o último envio de dados do cliente ao servidor e o momento em que a tabela é exibida na tela. Se a diferença for maior que 30 segundos, o cliente é classificado como Off-line; caso contrário, como On-line.
 #### Por último, detalharCliente() recebe o IP-alvo e seus respectivos dados, imprimindo na tela uma tabela com IP, S.O., CPU, RAM, Disco e Interfaces de Rede. Caso o servidor não possua nenhum registro do cliente do IP-alvo, o método informa ao usuário que não foram encontrados dados e retorna ao dashboard simplificado.
-### Integração ao projeto:
+### Integração de Interface ao projeto:
+#### A classe Interface é integrada ao projeto na classe ServidorTCP. No construtor da classe ServidorTCP, a variável tela é inicializada com uma instância da Interface e a variável clientes inicia como uma lista vazia. Logo após, no momento em que o ServidorTCP recebe uma conexão válida, ele chama o método processar_dados_cliente().
+#### Durante o processamento dos dados, é inserido mais um item no dicionário de dados do cliente: a chave "visibilidade", cujo valor é o registro de tempo em que o pacote foi recebido. Prosseguindo, a lista clientes é atualizada com um dicionário onde a chave é o IP do cliente e o valor contém seus dados completos. Em seguida, o sistema chama o método desenharDashboard do objeto tela com a lista atualizada.
+#### Durante a execução do ServidorTCP, o usuário também pode pressionar Ctrl + C. Esse comando limpa a tela e desenha um menu com as opções: detalhar um cliente, voltar ao dashboard simplificado ou encerrar o servidor. Se o usuário escolher "Detalhar um cliente", surge uma tela com os IPs disponíveis para auxiliar na digitação, e o IP-alvo escolhido é passado como parâmetro para o método detalharCliente(). Caso escolha "Voltar ao monitoramento", o sistema chama o método dashboard e retorna ao painel simplificado. Por último, se o usuário escolher "Sair", a execução do ServidorTCP é encerrada.
