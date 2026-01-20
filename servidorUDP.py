@@ -33,7 +33,7 @@ class servidorUDP:
                 except socket.timeout:
                         pass
                 except Exception as e: # Se acontecer um erro na função listen, imprime na tela o erro
-                    print(f"Erro no listen: {e} ")
+                    print(f"Erro no listen: <{e}> ")
 
         except KeyboardInterrupt:
             print(f"Finalizando a descoberta automática...")
