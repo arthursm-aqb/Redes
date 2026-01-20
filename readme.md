@@ -1,3 +1,8 @@
+### Bibliotecas usadas
+
+#### Cryptography, Socket, Json, Time, psutil, platform, os.
+
+
 #   Objetivo do projeto 
  
 ### Construir um sistema cliente/servidor para inventário e monitoramento de computadores em rede, com descoberta automática, coleta de métricas, consolidação de dados e ação remota segura, por meio de comandos administrativos ou integração com ferramenta padrão de controle remoto.
