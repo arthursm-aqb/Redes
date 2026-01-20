@@ -8,7 +8,7 @@ porta = 6000
 class servidorUDP:
 
     def __init__(self):
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # Cria um ponto de conexão IPv4 UDP
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # Cria um socket IPv4 UDP
         self.socket.bind(('0.0.0.0', porta)) # Vincula esse ponto de conexão na porta 6000 e aceita receber pacotes de qualquer interface de rede (Wi-Fi, Ethernet, Loopback)
         self.socket.settimeout(1.0)
         print(f"Servidor de descoberta automática de clientes inicializado com sucesso no protocolo IPV4 UDP!")
