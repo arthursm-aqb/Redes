@@ -18,7 +18,7 @@ docker compose up -d --build ; docker attach server_tcp
 ```
 docker compose up -d --build && docker attach server_tcp
 ```
-#### 3. Em qualquer aparelho conectada na mesma rede, vá até os arquivos em:
+#### 3. Em qualquer aparelho conectado na mesma rede, vá até os arquivos em:
 ```
 cd App/User/
 ```
