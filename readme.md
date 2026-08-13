@@ -2,6 +2,37 @@
 
 #### Cryptography, Socket, Json, Time, psutil, platform, os.
 
+## Como executar o projeto
+
+#### 1. Baixe o aplicativo e vá até pasta dos arquivos Host
+```
+cd App/Host/
+```
+#### 2. Utilize o Docker Compose
+
+##### Windows
+```
+docker compose up -d --build ; docker attach server_tcp
+```
+##### Linux
+```
+docker compose up -d --build && docker attach server_tcp
+```
+#### 3. Em qualquer aparelho conectada na mesma rede, vá até os arquivos em:
+```
+cd App/User/
+```
+#### 4. Baixe as dependências
+```
+pip install -r requirements.txt
+```
+
+#### 5. Execute o cliente.py
+```
+python cliente.py
+```
+   
+
 
 #   Objetivo do projeto 
  
