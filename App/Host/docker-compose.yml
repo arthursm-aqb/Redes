@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  udp:
+    build:
+      context: ./UDP
+    container_name: server_udp
+    ports:
+      - "6000:6000/udp"
+    networks:
+      - rede_host
+    restart: always
+
+  tcp:
+    build:
+      context: ./TCP
+    container_name: server_tcp
+    ports:
+      - "6000:6000/tcp"
+    networks:
+      - rede_host
+    stdin_open: true
+    tty: true
+    restart: 'no'
+
+networks:
+  rede_host:
+    driver: bridge
